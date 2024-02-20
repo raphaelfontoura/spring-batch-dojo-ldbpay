@@ -1,6 +1,6 @@
 package com.ldbpay.dojo.springbatch.batchConfig
 
-import com.ldbpay.dojo.springbatch.model.AccountTypeEnum
+import com.ldbpay.dojo.springbatch.dto.PayoutInput
 import com.ldbpay.dojo.springbatch.model.Payout
 import javax.sql.DataSource
 import org.springframework.batch.core.Job
@@ -21,16 +21,16 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager
 class BatchConfiguration {
 
     @Bean
-    fun reader(): FlatFileItemReader<Payout> {
-        return FlatFileItemReaderBuilder<Payout>()
+    fun reader(): FlatFileItemReader<PayoutInput> {
+        return FlatFileItemReaderBuilder<PayoutInput>()
             .name("payoutItemReader")
             .resource(ClassPathResource("payout.csv"))
             .delimited()
             .names("value","type","psp")
             .fieldSetMapper {fieldSet ->
-                Payout(
-                    value = fieldSet.readLong("value"),
-                    type = AccountTypeEnum.valueOf(fieldSet.readString("type")),
+                PayoutInput(
+                    value = fieldSet.readDouble("value"),
+                    type = fieldSet.readString("type"),
                     psp = fieldSet.readString("psp")
                 )
             }
@@ -72,12 +72,12 @@ class BatchConfiguration {
     fun step1(
         jobRepository: JobRepository,
         transactionManager: DataSourceTransactionManager,
-        reader: FlatFileItemReader<Payout>,
+        reader: FlatFileItemReader<PayoutInput>,
         processor: PayoutItemProcessor,
         writer: JdbcBatchItemWriter<Payout>
     ): Step {
         return StepBuilder("step1", jobRepository)
-            .chunk<Payout, Payout>(4, transactionManager)
+            .chunk<PayoutInput, Payout>(4, transactionManager)
             .reader(reader)
             .processor(processor)
             .writer(writer)
