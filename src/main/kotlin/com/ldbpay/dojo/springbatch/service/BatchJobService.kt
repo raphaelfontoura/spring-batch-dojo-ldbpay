@@ -29,12 +29,12 @@ import org.springframework.transaction.PlatformTransactionManager
 class BatchJobService(
     private val job: Job,
     private val jobLauncher: JobLauncher,
-    private val reader: FlatFileItemReaderBuilder<PayoutInput>
+    private val reader: FlatFileItemReader<PayoutInput>
 ) {
 
     fun run(fileName: String) {
-        reader.name("teste").resource(ClassPathResource(fileName))
-        val jobParamenter = JobParameter<String>(fileName, String::class.java)
+        reader.setResource(ClassPathResource(fileName))
+        val jobParamenter = JobParameter(fileName, String::class.java)
         val mapJobParameter = mapOf(fileName to jobParamenter)
         jobLauncher.run(job, JobParameters(mapJobParameter))
     }

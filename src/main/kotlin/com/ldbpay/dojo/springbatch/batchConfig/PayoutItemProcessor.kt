@@ -12,7 +12,6 @@ class PayoutItemProcessor: ItemProcessor<PayoutInput, Payout> {
         private val logger = LoggerFactory.getLogger(this::class.java)
     }
 
-
     override fun process(item: PayoutInput): Payout {
         logger.info("Passando no item processor com item: {}",item)
         val payout =  Payout(
