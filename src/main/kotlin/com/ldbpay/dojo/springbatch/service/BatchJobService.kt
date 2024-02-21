@@ -6,6 +6,7 @@ import com.ldbpay.dojo.springbatch.dto.PayoutInput
 import com.ldbpay.dojo.springbatch.model.Payout
 import javax.sql.DataSource
 import org.springframework.batch.core.Job
+import org.springframework.batch.core.JobParameter
 import org.springframework.batch.core.JobParameters
 import org.springframework.batch.core.Step
 import org.springframework.batch.core.job.builder.JobBuilder
@@ -33,7 +34,9 @@ class BatchJobService(
 
     fun run(fileName: String) {
         reader.name("teste").resource(ClassPathResource(fileName))
-        jobLauncher.run(job, JobParameters())
+        val jobParamenter = JobParameter<String>(fileName, String::class.java)
+        val mapJobParameter = mapOf(fileName to jobParamenter)
+        jobLauncher.run(job, JobParameters(mapJobParameter))
     }
 
 }

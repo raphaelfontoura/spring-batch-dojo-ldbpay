@@ -66,6 +66,7 @@ class BatchConfiguration(
             .build()
     }
 
+    @Bean
     fun job(
         jobRepository: JobRepository,
         step1: SimpleStepBuilder<PayoutInput, Payout>,
