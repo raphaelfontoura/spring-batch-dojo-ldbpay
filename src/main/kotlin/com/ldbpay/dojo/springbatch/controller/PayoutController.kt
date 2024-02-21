@@ -1,4 +1,4 @@
-package com.ldbpay.dojo.springbatch
+package com.ldbpay.dojo.springbatch.controller
 
 import com.ldbpay.dojo.springbatch.infra.PayoutRepository
 import com.ldbpay.dojo.springbatch.model.Payout
