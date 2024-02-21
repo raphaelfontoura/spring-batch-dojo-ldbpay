@@ -24,6 +24,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.core.io.ClassPathResource
 import org.springframework.stereotype.Service
 import org.springframework.transaction.PlatformTransactionManager
+import org.springframework.web.multipart.MultipartFile
 
 @Service
 class BatchJobService(
@@ -37,6 +38,12 @@ class BatchJobService(
         val jobParamenter = JobParameter(fileName, String::class.java)
         val mapJobParameter = mapOf(fileName to jobParamenter)
         jobLauncher.run(job, JobParameters(mapJobParameter))
+    }
+
+    fun store(file: MultipartFile) {
+        reader.setResource(file.resource)
+        val jobParameter = JobParameter(file.originalFilename ?: file.name, String::class.java)
+        jobLauncher.run(job, JobParameters(mapOf(file.name to jobParameter)))
     }
 
 }

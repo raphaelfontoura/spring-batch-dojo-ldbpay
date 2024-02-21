@@ -3,14 +3,11 @@ package com.ldbpay.dojo.springbatch.controller
 import com.ldbpay.dojo.springbatch.infra.PayoutRepository
 import com.ldbpay.dojo.springbatch.model.Payout
 import com.ldbpay.dojo.springbatch.service.BatchJobService
-import org.springframework.batch.core.Job
-import org.springframework.batch.core.launch.JobLauncher
 import org.springframework.transaction.annotation.Transactional
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
+import org.springframework.web.servlet.mvc.support.RedirectAttributes
+
 
 @RestController
 @RequestMapping("payout")
@@ -31,7 +28,21 @@ class PayoutController(
     }
 
     @GetMapping("execute/{name}")
-    fun loadFile(@PathVariable name: String) {
+    fun loadFileName(@PathVariable name: String) {
         batchJobService.run(name)
+    }
+
+    @PostMapping
+    fun handleFileUpload(
+        @RequestParam("file") file: MultipartFile,
+        redirectAttributes: RedirectAttributes
+    ): String {
+        batchJobService.store(file)
+        redirectAttributes.addFlashAttribute(
+            "message",
+            "You successfully uploaded " + file.originalFilename + "!"
+        )
+
+        return "redirect:/"
     }
 }
