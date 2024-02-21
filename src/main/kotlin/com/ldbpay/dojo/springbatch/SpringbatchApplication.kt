@@ -1,7 +1,5 @@
 package com.ldbpay.dojo.springbatch
 
-import kotlin.system.exitProcess
-import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
